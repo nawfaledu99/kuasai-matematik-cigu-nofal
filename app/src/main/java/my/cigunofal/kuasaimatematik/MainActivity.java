@@ -39,6 +39,26 @@ public class MainActivity extends Activity {
     }
 
     @Override
+    protected void onPause() {
+        if (webView != null) {
+            webView.evaluateJavascript("if(window.handleAppPause){handleAppPause();}", null);
+            webView.onPause();
+            webView.pauseTimers();
+        }
+        super.onPause();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (webView != null) {
+            webView.onResume();
+            webView.resumeTimers();
+            webView.evaluateJavascript("if(window.handleAppResume){handleAppResume();}", null);
+        }
+    }
+
+    @Override
     public void onBackPressed() {
         if (webView.canGoBack()) webView.goBack(); else super.onBackPressed();
     }
